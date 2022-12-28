@@ -1,6 +1,7 @@
 package com.motivity.mlionlineoppbooking.service.serviceimpl;
 
 import com.motivity.mlionlineoppbooking.entity.Users;
+import com.motivity.mlionlineoppbooking.models.DoctorRegisterRequest;
 import com.motivity.mlionlineoppbooking.models.PatientRegisterRequest;
 import com.motivity.mlionlineoppbooking.repository.UsersRepository;
 import com.motivity.mlionlineoppbooking.service.UsersService;
@@ -34,6 +35,13 @@ public class UsersServiceImpl implements UsersService , UserDetailsService {
         return usersRepository.save(users);
     }
 
+    @Override
+    public Users saveDoctor(DoctorRegisterRequest registerRequest) {
+        registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        Users users  =modelMapper.map(registerRequest,Users.class);
+        users.setRoles(Collections.singleton("doctor"));
+        return usersRepository.save(users);
+    }
     @Override
     public Optional<Users> findByEmail(String email) {
         return usersRepository.findByEmail(email);
