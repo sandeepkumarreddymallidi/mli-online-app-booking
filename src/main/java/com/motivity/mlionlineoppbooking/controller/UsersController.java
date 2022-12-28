@@ -37,37 +37,46 @@ public class UsersController {
     private UsersRepository usersRepository;
 
     @PostMapping("/userRegister")
-    public String patientRegister(@RequestBody PatientRegisterRequest registerRequest)
+    public ResponseEntity<String > patientRegister(@RequestBody PatientRegisterRequest registerRequest)
     {
         Users user = usersService.saveUsers(registerRequest);
         if(user==null)
         {
-            return "failed";
+            return new ResponseEntity<>("failed",HttpStatus.EXPECTATION_FAILED);
         }
         else
         {
-            return "success";
+            return new ResponseEntity<>("success",HttpStatus.OK);
         }
     }
     @PostMapping("/doctorRegister")
-    public String doctorRegister(@RequestBody DoctorRegisterRequest registerRequest)
+    public ResponseEntity<String> doctorRegister(@RequestBody DoctorRegisterRequest registerRequest)
     {
         Users user = usersService.saveDoctor(registerRequest);
         if(user==null)
         {
-            return "failed";
+            return new ResponseEntity<>("failed",HttpStatus.EXPECTATION_FAILED);
+
         }
         else
         {
-            return "success";
+            return new ResponseEntity<>("success",HttpStatus.OK);
+
         }
     }
-    @GetMapping("getprofiledata")
-    public ResponseEntity<DoctorProfileResponse> profileResponse(@RequestParam (name = "email") String email)
+    @GetMapping("getDoctorProfileData")
+    public ResponseEntity<DoctorProfileResponse> doctorProfileResponse(@RequestParam (name = "email") String email)
     {
        Users users = usersRepository.findByEmail(email).get();
 
     return new ResponseEntity<>(modelMapper.map(users,DoctorProfileResponse.class), HttpStatus.OK);
+    }
+    @GetMapping("getPatientProfileData")
+    public ResponseEntity<PatientProfileResponse> patientProfileResponse(@RequestParam (name = "email") String email)
+    {
+        Users users = usersRepository.findByEmail(email).get();
+
+        return new ResponseEntity<>(modelMapper.map(users,PatientProfileResponse.class), HttpStatus.OK);
     }
 
     @PostMapping("/patientLogin")
@@ -93,7 +102,22 @@ public class UsersController {
 
         if(result==1)
         {
-            return new ResponseEntity<>(modelMapper.map(profileResponse(profile.getEmail()),DoctorProfileResponse.class),HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(modelMapper.map(doctorProfileResponse(profile.getEmail()),DoctorProfileResponse.class),HttpStatus.ACCEPTED);
+        }
+        else {
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+        }
+
+    }
+    @PostMapping("updatePatient")
+    public ResponseEntity<PatientProfileResponse> updatePatient(@RequestBody UpdateProfileRequest profile)
+    {
+
+        int result=usersRepository.updatePatient(profile.getFirstName(), profile.getLastName(),profile.getPhoneNo(),profile.getAddress(),profile.getAge(), profile.getUserId());
+
+        if(result==1)
+        {
+            return new ResponseEntity<>(modelMapper.map(patientProfileResponse(profile.getEmail()),PatientProfileResponse.class),HttpStatus.ACCEPTED);
         }
         else {
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
@@ -101,7 +125,7 @@ public class UsersController {
 
     }
 
-    @PostMapping("/doctorPasswordChange")
+    @PostMapping("/passwordChange")
     public ResponseEntity<String> ChangePassword(@RequestBody ChangePasswordRequest passwordRequest) {
         System.out.println(passwordRequest.getUserId());
         Users user = usersRepository.findById(passwordRequest.getUserId()).get();

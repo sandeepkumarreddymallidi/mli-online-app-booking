@@ -21,6 +21,7 @@ public class Users {
     private String phoneNo;
     private String firstName;
     private String lastName;
+    private int age;
     private String gender;
     private String address;
     private String department;

@@ -18,5 +18,10 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
     @Modifying
     @Query("update Users user set user.password=:password where user.userId=:userId")
     public int changeDoctorPassword(String password,long userId);
+    @Transactional
+    @Modifying
+    @Query("update Users user set user.firstName=:firstName,user.lastName=:lastName,user.phoneNo=:phoneNo,user.address=:address,user.age=:age where user.userId=:userId")
+    public int updatePatient(String firstName,String lastName,String phoneNo,String address,int age,long userId);
+
 
 }

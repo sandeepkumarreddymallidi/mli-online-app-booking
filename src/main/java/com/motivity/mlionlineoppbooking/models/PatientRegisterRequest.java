@@ -15,4 +15,5 @@ public class PatientRegisterRequest {
     private String lastName;
     private String gender;
     private String address;
+    private String age;
 }
