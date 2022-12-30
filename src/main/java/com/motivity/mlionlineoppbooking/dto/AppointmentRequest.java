@@ -1,20 +1,13 @@
-package com.motivity.mlionlineoppbooking.entity;
-
+package com.motivity.mlionlineoppbooking.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.*;
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@DynamicInsert
-public class Appointments {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long appointmentId;
+@NoArgsConstructor
+public class AppointmentRequest {
+    private int appointmentId;
     private long patientId;
     private String patientName;
     private String patientPhoneNo;
@@ -28,6 +21,5 @@ public class Appointments {
     private String doctorGender;
     private String doctorPhoneNo;
     private long doctorId;
-    @Column(columnDefinition = "varchar(255) default 'pending'")
     private String status;
 }

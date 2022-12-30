@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UsersRepository extends JpaRepository<Users,Long> {
@@ -24,4 +25,5 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
     public int updatePatient(String firstName,String lastName,String phoneNo,String address,int age,long userId);
 
 
+    public List<Users> findByRoles(String role);
 }

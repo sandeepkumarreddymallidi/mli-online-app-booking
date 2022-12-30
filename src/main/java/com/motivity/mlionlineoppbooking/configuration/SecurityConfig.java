@@ -39,8 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests().antMatchers("/swagger-ui/**", "/https://ml-hospital-mngmt.azurewebsites.net/**","/v3/api-docs/**","https://purple-rock-016e6c310.2.azurestaticapps.net/").permitAll();
-        http.authorizeRequests().antMatchers("/patientLogin","/userRegister","/doctorRegister","/passwordChange").permitAll()
-                .anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/doctorRegister","/passwordChange","/doctorsLists","/showPendingAppointments","/showAcceptedAppointments","/acceptAppointments").authenticated()
+                .antMatchers("login","/userRegister").permitAll();
     }
     @Bean
     public AuthenticationManager authentications() throws Exception {

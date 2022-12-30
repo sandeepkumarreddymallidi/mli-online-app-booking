@@ -18,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 public class UsersController {
     @Autowired
@@ -79,7 +82,7 @@ public class UsersController {
         return new ResponseEntity<>(modelMapper.map(users,PatientProfileResponse.class), HttpStatus.OK);
     }
 
-    @PostMapping("/patientLogin")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest authRequest) {
         //  : validate un/pwd with data base
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -139,8 +142,14 @@ public class UsersController {
             return new ResponseEntity<>("failed",HttpStatus.BAD_REQUEST);
         }
 
-
     }
 
+    @GetMapping("/doctorsLists")
+    List<DoctorListRequest> doctorsList()
+    {
+        List<Users> doctorsList=usersService.findByRoles("doctor");
+        List<DoctorListRequest> list=doctorsList.stream().map(doctor ->modelMapper.map(doctor, DoctorListRequest.class)).collect(Collectors.toList());
+        return list;
+    }
 
 }

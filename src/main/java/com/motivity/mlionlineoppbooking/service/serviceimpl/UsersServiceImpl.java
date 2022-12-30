@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,11 @@ public class UsersServiceImpl implements UsersService , UserDetailsService {
     @Override
     public Optional<Users> findByEmail(String email) {
         return usersRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<Users> findByRoles(String role) {
+        return usersRepository.findByRoles(role);
     }
 
 
