@@ -145,11 +145,24 @@ public class UsersController {
     }
 
     @GetMapping("/doctorsLists")
-    List<DoctorListRequest> doctorsList()
+    public List<DoctorListRequest> getDoctorsList()
     {
         List<Users> doctorsList=usersService.findByRoles("doctor");
         List<DoctorListRequest> list=doctorsList.stream().map(doctor ->modelMapper.map(doctor, DoctorListRequest.class)).collect(Collectors.toList());
         return list;
     }
+
+    @GetMapping("/patientLists")
+    public ResponseEntity<List<PatientListRequest>> getPatientList()
+    {
+        List<Users> patientList=usersService.findByRoles("user");
+        List<PatientListRequest> list=patientList.stream().map(patient->modelMapper.map(patient,PatientListRequest.class)).collect(Collectors.toList());
+        if(list.isEmpty())
+        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
+
 
 }
