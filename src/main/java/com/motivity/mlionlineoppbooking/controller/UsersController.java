@@ -14,10 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,14 +88,16 @@ public class UsersController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest authRequest) {
         //  : validate un/pwd with data base
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+       Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authRequest.getEmail(), authRequest.getPassword())
         );
 
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
         UserDetails userDetails = service.loadUserByUsername(authRequest.getEmail());
         if (passwordEncoder.matches(authRequest.getPassword(), userDetails.getPassword())) {
-            String token = jwtUtil.generateToken(authRequest.getEmail());
-            return ResponseEntity.ok(new AuthResponse(token, userDetails.getUsername(), userDetails.getAuthorities()));
+            String accessToken = jwtUtil.generateToken(authRequest.getEmail());
+            String refreshToken= jwtUtil.generateRefreshToken(authRequest.getEmail());
+            return ResponseEntity.ok(new AuthResponse(accessToken, userDetails.getUsername(), userDetails.getAuthorities(),refreshToken));
         }
         return null;
     }
@@ -164,5 +169,13 @@ public class UsersController {
     }
 
 
+    @GetMapping("/refreshToken")
+    public AuthResponse getRefreshToken(HttpServletRequest request)
+    {
+       String t =request.getAuthType();
+
+
+        return null;
+    }
 
 }

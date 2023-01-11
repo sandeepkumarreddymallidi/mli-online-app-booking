@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Collections;
 
 @EnableWebSecurity
@@ -29,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration corsConfiguration=new CorsConfiguration();
                 corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
-                corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:3000/"));
+                corsConfiguration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000/","*"));
                 corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
                 corsConfiguration.setAllowCredentials(true);
                 corsConfiguration.setMaxAge(3600L);

@@ -15,4 +15,6 @@ public class AuthResponse {
     private String authToken;
     private String email;
     private Collection<? extends GrantedAuthority> authorities;
+
+    private String refreshToken;
 }

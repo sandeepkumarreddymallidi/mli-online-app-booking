@@ -15,11 +15,19 @@ public class JwtUtil {
     // 1 : Generate Token
     public String generateToken(String subject) {
 
-        String token = Jwts.builder().setSubject(subject).setIssuer("motivity")
+        String accessToken = Jwts.builder().setSubject(subject).setIssuer("motivity")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(10)))
                 .signWith(SignatureAlgorithm.HS512, secrete.getBytes()).compact();
-        return token;
+        return accessToken;
+    }
+    public String generateRefreshToken(String subject) {
+
+        String refreshToken= Jwts.builder().setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(100)))
+                .signWith(SignatureAlgorithm.HS512, secrete.getBytes()).compact();
+        return refreshToken;
     }
 
     // 2 : Read Claims
